@@ -1,39 +1,103 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using Securely.Entities;
 
-namespace Securely.Entities;
+namespace Securely.net.Entities;
+
 /// <summary>
-/// Represents a response from the Api
+/// A generic response for all requests made.
 /// </summary>
-/// <typeparam name="TResponse"></typeparam>
-public class SecurelyResponse<TResponse> : SecurelyResponse
+public interface ISecurelyResponse
 {
     /// <summary>
-    /// Contains the response data for the request.
+    /// The value passed to the api endpoint as the request
     /// </summary>
-    public TResponse? Payload { get; set; }
+    string? RawRequest { get; set; }
+
+    /// <summary>
+    /// The raw response of the request from the api endpoint
+    /// </summary>
+    string? RawResponse { get; set; }
+
+    /// <summary>
+    /// The url that was called for the endpoint
+    /// </summary>
+    string? Url { get; set; }
+
+    /// <summary>
+    /// The response status code from the request
+    /// </summary>
+    HttpStatusCode StatusCode { get; set; }
+
+    /// <summary>
+    /// Was the request successful, this is determined from the StatusCode
+    /// </summary>
+    bool IsSuccessful { get; }
+
+    /// <summary>
+    /// Any headers that are returned from the response
+    /// </summary>
+    public string? Headers { get; set; }
 }
 
 /// <summary>
-/// Represents a response from the Api
+/// A generic response for all requests made.
 /// </summary>
-public class SecurelyResponse
+public interface ISecurelyResponse<TEntity> : ISecurelyResponse
 {
     /// <summary>
-    /// A unique identifier assigned to request
+    /// If there is data that was returned from the request, it will be serialized to this entity
     /// </summary>
-    public string? CorrelationId { get; set; }
+    BaseResponse<TEntity?> Data { get; set; }
+}
+
+/// <summary>
+/// A generic response for all requests made.
+/// </summary>
+public class SecurelyResponse : ISecurelyResponse
+{
+    /// <summary>
+    /// The raw request in JSON format that was sent to the api
+    /// </summary>
+    public string? RawRequest { get; set; }
 
     /// <summary>
-    /// Whether or not the request was successful
+    /// The raw body response in JSON format that was returned from the api
     /// </summary>
-    public bool Success => Error == null;
+    public string? RawResponse { get; set; }
 
     /// <summary>
-    /// Error information in the case that the request was unsuccessful
+    /// The full url that was called for the endpoint
     /// </summary>
-    public SecurelyResponseError? Error { get; set; }
+    public string? Url { get; set; }
+
+    /// <summary>
+    /// The HTTP Status Code returned from the request
+    /// </summary>
+    public HttpStatusCode StatusCode { get; set; }
+
+    /// <summary>
+    /// Any headers that are returned from the response
+    /// </summary>
+    public string? Headers { get; set; }
+
+    /// <summary>
+    /// Determines if the request was successful based on the StatusCode
+    /// </summary>
+    public bool IsSuccessful => (int)StatusCode >= 200 && (int)StatusCode < 300;
+}
+
+/// <summary>
+/// A generic response for all requests made.
+/// </summary>
+public class SecurelyResponse<TTEntity> : SecurelyResponse, ISecurelyResponse<TTEntity> where TTEntity : new()
+{
+    /// <summary>
+    /// If there is data that was returned from the request, it will be serialized to this entity
+    /// </summary>
+    public BaseResponse<TTEntity?> Data { get; set; } = new BaseResponse<TTEntity?>();
 }

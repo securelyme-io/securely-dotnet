@@ -3,7 +3,7 @@
   <PropertyGroup>
 	  <Description>Securely.net is a sync/async client and portable class library for the Securely API, supporting .NET Standard 2.1+, .NET Core 6.0+ (Official Library)</Description>
 	  <Version>1.0.0</Version>
-	  <LangVersion>10</LangVersion>
+	  <LangVersion>11</LangVersion>
 	  <Authors>Securely, Chad Meyer</Authors>
 	  <TargetFrameworks>net6.0;net7.0;net8.0;net9.0;netstandard2.1;</TargetFrameworks>
 	  <PackageTags>securely;payment;credit;cards;money;gateway;</PackageTags>

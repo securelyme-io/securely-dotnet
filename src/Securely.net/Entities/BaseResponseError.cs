@@ -10,7 +10,7 @@ namespace Securely.Entities;
 /// <summary>
 /// Error information in the case that the request was unsuccessful
 /// </summary>
-public class SecurelyResponseError
+public class BaseResponseError
 {
     /// <summary>
     /// Error Code

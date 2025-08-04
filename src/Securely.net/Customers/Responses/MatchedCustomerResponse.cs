@@ -10,9 +10,18 @@ namespace Securely.Customers.Responses;
 /// </summary>
 public class MatchedCustomerResponse
 {
-    public CustomerResponse Customer { get; set; }
+    /// <summary>
+    /// Customer object.
+    /// </summary>
+    public CustomerResponse? Customer { get; set; }
 
-    public List<string> MatchOn { get; set; }
+    /// <summary>
+    /// List of matching fields for customer based on request.
+    /// </summary>
+    public List<string> MatchOn { get; set; } = new();
 
-    public bool isExactMatch { get; set; }
+    /// <summary>
+    /// Whether or not the customer matches the import request exactly.
+    /// </summary>
+    public bool isExactMatch { get; set; } = false;
 }

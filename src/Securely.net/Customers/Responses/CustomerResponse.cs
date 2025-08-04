@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Securely.Customers.Types;
 
 namespace Securely.Customers.Responses;
 /// <summary>
@@ -18,12 +19,12 @@ public class CustomerResponse
     /// <summary>
     /// First name of customer.
     /// </summary>
-    public string FirstName { get; set; }
+    public string FirstName { get; set; } = string.Empty;
 
     /// <summary>
     /// Last name of customer.
     /// </summary>
-    public string LastName { get; set; }
+    public string LastName { get; set; } = string.Empty;
 
     /// <summary>
     /// Cell phone for customer.
@@ -38,7 +39,7 @@ public class CustomerResponse
     /// <summary>
     /// Customer Status (ACTIVE, INVITECUSTOMER, INVITEBUSINESS, SUSPENDED).
     /// </summary>
-    public string Status { get; set; }
+    public CustomerStatus Status { get; set; }
 
     /// <summary>
     /// Company name for customer. Updateable through API.
