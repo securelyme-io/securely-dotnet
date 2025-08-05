@@ -4,7 +4,6 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using Securely.Entities;
 using Securely.JsonConverters;
-using Securely.net.Entities;
 
 namespace Securely;
 
@@ -27,7 +26,7 @@ public class SecurelyService
     {
         _apiKey = apiKey;
         _apiSecret = apiSecret;
-        _apiUrl = isSandbox ? "https://sandbox.securelyme.io" : "https://api.securelyme.io";
+        _apiUrl = isSandbox ? "https://sandbox-api.securelyme.io" : "https://api.securelyme.io";
     }
     private readonly JsonSerializerOptions _jsonSerializerOptions = new()
     {
@@ -82,7 +81,7 @@ public class SecurelyService
                 ? await response.RequestMessage.Content.ReadAsStringAsync()
                 : null,
         };
-        integrationResponse.Data = JsonSerializer.Deserialize<BaseResponse<TEntity?>>(integrationResponse.RawResponse) ?? new BaseResponse<TEntity?>();
+        integrationResponse.Data = JsonSerializer.Deserialize<BaseResponse<TEntity?>>(integrationResponse.RawResponse, _jsonSerializerOptions) ?? new BaseResponse<TEntity?>();
 
         return integrationResponse;
     }

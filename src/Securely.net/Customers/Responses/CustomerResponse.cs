@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Text.Json.Serialization;
 using Securely.Customers.Types;
 
 namespace Securely.Customers.Responses;
@@ -39,6 +35,7 @@ public class CustomerResponse
     /// <summary>
     /// Customer Status (ACTIVE, INVITECUSTOMER, INVITEBUSINESS, SUSPENDED).
     /// </summary>
+    [JsonConverter(typeof(JsonStringEnumConverter))]
     public CustomerStatus Status { get; set; }
 
     /// <summary>

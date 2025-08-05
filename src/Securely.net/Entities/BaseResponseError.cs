@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Securely.Entities;
+﻿namespace Securely.Entities;
 
 /// <summary>
 /// Error information in the case that the request was unsuccessful

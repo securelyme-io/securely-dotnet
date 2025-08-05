@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Securely.Customers.Requests;
+﻿using Securely.Customers.Requests;
 using Securely.Customers.Responses;
+using Securely.Entities;
 
 
 namespace Securely.Customers;
@@ -19,7 +15,7 @@ public interface ICustomersService
     /// </summary>
     /// <param name="request">The request containing the customers to import.</param>
     /// <returns>A response containing the results of the import.</returns>
-    Task<ImportCustomerResponse> ImportCustomerAsync(ImportCustomerRequest request);
+    Task<ISecurelyResponse<ImportCustomerResponse?>> ImportCustomerAsync(ImportCustomerRequest request);
 }
 
 /// <summary>
@@ -39,13 +35,6 @@ public class CustomersService : SecurelyService, ICustomersService
     /// </summary>
     /// <param name="request"></param>
     /// <returns></returns>
-    public async Task<ImportCustomerResponse> ImportCustomerAsync(ImportCustomerRequest request)
-    {
-        // Implementation of the import logic goes here.
-        // This is a placeholder implementation.
-        return await Task.FromResult(new ImportCustomerResponse
-        {
-            Customers = new List<MatchedCustomerResponse>()
-        });
-    }
+    public async Task<ISecurelyResponse<ImportCustomerResponse?>> ImportCustomerAsync(ImportCustomerRequest request)
+        => await ExecuteAsync<ImportCustomerRequest, ImportCustomerResponse>(request, "/customers/import");
 }

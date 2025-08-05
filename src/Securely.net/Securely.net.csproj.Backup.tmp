@@ -29,19 +29,15 @@
 
   <ItemGroup>
     <Compile Remove="Customers\NewFolder\**" />
-    <Compile Remove="Subscriptions\NewFolder1\**" />
-    <Compile Remove="Subscriptions\NewFolder\**" />
     <EmbeddedResource Remove="Customers\NewFolder\**" />
-    <EmbeddedResource Remove="Subscriptions\NewFolder1\**" />
-    <EmbeddedResource Remove="Subscriptions\NewFolder\**" />
     <None Remove="Customers\NewFolder\**" />
-    <None Remove="Subscriptions\NewFolder1\**" />
-    <None Remove="Subscriptions\NewFolder\**" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Extensions\" />
     <Folder Include="Requests\" />
+    <Folder Include="Subscriptions\Responses\" />
+    <Folder Include="Subscriptions\Requests\" />
   </ItemGroup>
 
   <ItemGroup>

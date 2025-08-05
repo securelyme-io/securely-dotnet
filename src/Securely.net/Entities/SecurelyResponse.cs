@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Text;
-using System.Threading.Tasks;
-using Securely.Entities;
+﻿using System.Net;
 
-namespace Securely.net.Entities;
+namespace Securely.Entities;
 
 /// <summary>
 /// A generic response for all requests made.
