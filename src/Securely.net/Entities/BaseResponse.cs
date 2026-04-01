@@ -3,8 +3,7 @@
 /// Represents a response from the Api
 /// </summary>
 /// <typeparam name="TResponse"></typeparam>
-public class BaseResponse<TResponse> : BaseResponse
-{
+public class BaseResponse<TResponse> : BaseResponse {
     /// <summary>
     /// Contains the response data for the request.
     /// </summary>
@@ -14,8 +13,7 @@ public class BaseResponse<TResponse> : BaseResponse
 /// <summary>
 /// Represents a response from the Api
 /// </summary>
-public class BaseResponse
-{
+public class BaseResponse {
     /// <summary>
     /// A unique identifier assigned to request
     /// </summary>

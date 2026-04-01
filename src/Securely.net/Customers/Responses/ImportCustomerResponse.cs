@@ -2,8 +2,7 @@
 /// <summary>
 /// The response for doing a customer import
 /// </summary>
-public class ImportCustomerResponse
-{
+public class ImportCustomerResponse {
     /// <summary>
     /// The customers that were matched or created during the import
     /// </summary>

@@ -1,6 +1,6 @@
-﻿using System.Text.Json.Serialization;
-using Securely.net.Converters;
+﻿using Securely.net.Converters;
 using Securely.Subscriptions.Types;
+using System.Text.Json.Serialization;
 
 namespace Securely.Subscriptions.Requests;
 
@@ -12,8 +12,7 @@ namespace Securely.Subscriptions.Requests;
 /// It includes required fields such as the customer ID, amount, and subscription frequency, as well as  optional fields
 /// like internal notes and an external identifier. Ensure all required fields are  populated before submitting the
 /// request.</remarks>
-public class CreateSubscriptionRequest
-{
+public class CreateSubscriptionRequest {
     /// <summary>
     /// Description to keep track of subscription requests.
     /// Required. Length between 1 and 24.

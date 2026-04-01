@@ -1,6 +1,6 @@
-﻿using System.Text.Json;
+﻿using Securely.Subscriptions.Types;
+using System.Text.Json;
 using System.Text.Json.Serialization;
-using Securely.Subscriptions.Types;
 
 namespace Securely.net.Converters;
 
@@ -10,8 +10,7 @@ namespace Securely.net.Converters;
 /// <remarks>This converter handles the conversion of <see cref="Frequency"/> objects to and from JSON string
 /// representations. It is intended to be used with the <see cref="System.Text.Json"/> serialization
 /// framework.</remarks>
-public class FrequencyConverter : JsonConverter<Frequency>
-{
+public class FrequencyConverter : JsonConverter<Frequency> {
     /// <summary>
     /// Reads and converts the JSON string representation of a frequency into a <see cref="Frequency"/> object.
     /// </summary>
@@ -21,10 +20,8 @@ public class FrequencyConverter : JsonConverter<Frequency>
     /// <param name="options">The serializer options to use. This parameter is not used in this implementation.</param>
     /// <returns>A <see cref="Frequency"/> object created from the JSON string, or <see langword="null"/> if the token is not a
     /// string.</returns>
-    public override Frequency? Read(ref Utf8JsonReader reader, Type type, JsonSerializerOptions options)
-    {
-        if (reader.TokenType == JsonTokenType.String)
-        {
+    public override Frequency? Read(ref Utf8JsonReader reader, Type type, JsonSerializerOptions options) {
+        if (reader.TokenType == JsonTokenType.String) {
             return new Frequency(reader.GetString()!);
         }
 
@@ -39,8 +36,7 @@ public class FrequencyConverter : JsonConverter<Frequency>
     /// <param name="value">The <see cref="Frequency"/> value to write.</param>
     /// <param name="options">The serialization options to use. This parameter is not used in this implementation but is required by the
     /// method signature.</param>
-    public override void Write(Utf8JsonWriter writer, Frequency value, JsonSerializerOptions options)
-    {
+    public override void Write(Utf8JsonWriter writer, Frequency value, JsonSerializerOptions options) {
         writer.WriteStringValue(value.ToString());
     }
 }

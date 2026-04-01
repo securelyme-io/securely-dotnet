@@ -5,8 +5,7 @@ namespace Securely.Entities;
 /// <summary>
 /// A generic response for all requests made.
 /// </summary>
-public interface ISecurelyResponse
-{
+public interface ISecurelyResponse {
     /// <summary>
     /// The value passed to the api endpoint as the request
     /// </summary>
@@ -41,19 +40,18 @@ public interface ISecurelyResponse
 /// <summary>
 /// A generic response for all requests made.
 /// </summary>
-public interface ISecurelyResponse<TEntity> : ISecurelyResponse
-{
+/// <typeparam name="TData">The full response container type (e.g., BaseResponse&lt;Customer&gt; or PagedResponse&lt;Transaction&gt;)</typeparam>
+public interface ISecurelyResponse<TData> : ISecurelyResponse {
     /// <summary>
     /// If there is data that was returned from the request, it will be serialized to this entity
     /// </summary>
-    BaseResponse<TEntity?> Data { get; set; }
+    TData Data { get; set; }
 }
 
 /// <summary>
 /// A generic response for all requests made.
 /// </summary>
-public class SecurelyResponse : ISecurelyResponse
-{
+public class SecurelyResponse : ISecurelyResponse {
     /// <summary>
     /// The raw request in JSON format that was sent to the api
     /// </summary>
@@ -88,10 +86,10 @@ public class SecurelyResponse : ISecurelyResponse
 /// <summary>
 /// A generic response for all requests made.
 /// </summary>
-public class SecurelyResponse<TTEntity> : SecurelyResponse, ISecurelyResponse<TTEntity> where TTEntity : new()
-{
+/// <typeparam name="TData">The full response container type (e.g., BaseResponse&lt;Customer&gt; or PagedResponse&lt;Transaction&gt;)</typeparam>
+public class SecurelyResponse<TData> : SecurelyResponse, ISecurelyResponse<TData> where TData : new() {
     /// <summary>
     /// If there is data that was returned from the request, it will be serialized to this entity
     /// </summary>
-    public BaseResponse<TTEntity?> Data { get; set; } = new BaseResponse<TTEntity?>();
+    public TData Data { get; set; } = new TData();
 }

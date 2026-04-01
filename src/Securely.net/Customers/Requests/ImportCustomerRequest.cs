@@ -2,8 +2,7 @@
 /// <summary>
 /// 
 /// </summary>
-public class ImportCustomerRequest
-{
+public class ImportCustomerRequest {
     /// <summary>
     /// First name of customer, used when creating a new customer.
     /// </summary>

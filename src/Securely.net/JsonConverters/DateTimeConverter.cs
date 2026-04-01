@@ -6,8 +6,7 @@ namespace Securely.JsonConverters;
 /// <summary>
 /// Helps converts different formatted date strings to DateTime objects.
 /// </summary>
-public class DateTimeConverter : JsonConverter<DateTime>
-{
+public class DateTimeConverter : JsonConverter<DateTime> {
     private readonly List<string> _formats = new() {
         "MM/dd/yyyy",
         "MM-dd-yyyy",
@@ -27,12 +26,9 @@ public class DateTimeConverter : JsonConverter<DateTime>
     /// <param name="typeToConvert"></param>
     /// <param name="options"></param>
     /// <returns></returns>
-    public override DateTime Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
-    {
-        foreach (var format in _formats)
-        {
-            if (DateTime.TryParseExact(reader.GetString(), format, null, System.Globalization.DateTimeStyles.None, out var date))
-            {
+    public override DateTime Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) {
+        foreach (var format in _formats) {
+            if (DateTime.TryParseExact(reader.GetString(), format, null, System.Globalization.DateTimeStyles.None, out var date)) {
                 return date;
             }
         }
@@ -46,8 +42,7 @@ public class DateTimeConverter : JsonConverter<DateTime>
     /// <param name="writer"></param>
     /// <param name="value"></param>
     /// <param name="options"></param>
-    public override void Write(Utf8JsonWriter writer, DateTime value, JsonSerializerOptions options)
-    {
+    public override void Write(Utf8JsonWriter writer, DateTime value, JsonSerializerOptions options) {
         writer.WriteStringValue(value.ToString("yyyy-MM-ddTHH:mm:ss"));
     }
 }

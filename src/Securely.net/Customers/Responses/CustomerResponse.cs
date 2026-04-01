@@ -1,12 +1,11 @@
-﻿using System.Text.Json.Serialization;
-using Securely.Customers.Types;
+﻿using Securely.Customers.Types;
+using System.Text.Json.Serialization;
 
 namespace Securely.Customers.Responses;
 /// <summary>
 /// Customer object.
 /// </summary>
-public class CustomerResponse
-{
+public class CustomerResponse {
     /// <summary>
     /// Securely Customer ID
     /// </summary>

@@ -2,8 +2,7 @@
 /// <summary>
 /// Object that holds what the customer was matched on when doing an import
 /// </summary>
-public class MatchedCustomerResponse
-{
+public class MatchedCustomerResponse {
     /// <summary>
     /// Customer object.
     /// </summary>

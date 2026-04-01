@@ -6,8 +6,7 @@ namespace Securely.Customers.Types;
 /// Specifies the status of a customer in Securely.
 /// </summary>
 [JsonConverter(typeof(JsonStringEnumConverter<CustomerStatus>))]
-public enum CustomerStatus
-{
+public enum CustomerStatus {
     /// <summary>
     /// Customer is active.
     /// </summary>

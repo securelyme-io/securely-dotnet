@@ -1,35 +1,51 @@
-﻿using System.Net.Http.Headers;
+﻿using Microsoft.Extensions.Options;
+using Securely.Entities;
+using Securely.JsonConverters;
+using Securely.net.Entities;
+using Securely.net.Options;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using Securely.Entities;
-using Securely.JsonConverters;
 
 namespace Securely;
 
 /// <summary>
-/// Base service to actually send the request to Securely and secure the response
+/// Service for making requests to the Securely API
 /// </summary>
-public class SecurelyService
-{
-    private readonly string _apiKey;
-    private readonly string _apiSecret;
-    private readonly string _apiUrl;
+public interface ISecurelyService {
+    /// <summary>
+    /// Execute a GET request to the Securely API
+    /// </summary>
+    /// <typeparam name="TData">The full response container type (e.g., BaseResponse&lt;Customer&gt; or PagedResponse&lt;Transaction&gt;)</typeparam>
+    /// <param name="apiKey">The API key</param>
+    /// <param name="apiSecret">The API secret</param>
+    /// <param name="urlSuffix">The URL suffix for the endpoint</param>
+    /// <returns>The response from the API</returns>
+    Task<ISecurelyResponse<TData>> ExecuteAsync<TData>(string apiKey, string apiSecret, string urlSuffix)
+        where TData : new();
 
     /// <summary>
-    /// Create a service to communicate with the Securelty API
+    /// Execute a POST request to the Securely API
     /// </summary>
-    /// <param name="apiKey">The api key that you get from the merchant settings</param>
-    /// <param name="apiSecret">The api secret you get from the merchant settings</param>
-    /// <param name="isSandbox">Determining if the url should be the sandbox or production</param>
-    public SecurelyService(string apiKey, string apiSecret, bool isSandbox)
-    {
-        _apiKey = apiKey;
-        _apiSecret = apiSecret;
-        _apiUrl = isSandbox ? "https://sandbox-api.securelyme.io" : "https://api.securelyme.io";
-    }
-    private readonly JsonSerializerOptions _jsonSerializerOptions = new()
-    {
+    /// <typeparam name="TRequest">The request entity type</typeparam>
+    /// <typeparam name="TData">The full response container type (e.g., BaseResponse&lt;Customer&gt; or PagedResponse&lt;Transaction&gt;)</typeparam>
+    /// <param name="request">The request payload</param>
+    /// <param name="apiKey">The API key</param>
+    /// <param name="apiSecret">The API secret</param>
+    /// <param name="urlSuffix">The URL suffix for the endpoint</param>
+    /// <returns>The response from the API</returns>
+    Task<ISecurelyResponse<TData>> ExecuteAsync<TRequest, TData>(TRequest request, string apiKey, string apiSecret, string urlSuffix)
+        where TRequest : new()
+        where TData : new();
+}
+
+/// <summary>
+/// 
+/// </summary>
+public class SecurelyService : ISecurelyService {
+    private readonly SecurelyOptions _options;
+    private readonly JsonSerializerOptions _jsonSerializerOptions = new() {
         PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
         DefaultIgnoreCondition = JsonIgnoreCondition.Never,
         PropertyNameCaseInsensitive = true,
@@ -37,43 +53,38 @@ public class SecurelyService
         Converters = { new StringConverter(), new DateTimeConverter() },
     };
 
+    private readonly IHttpClientFactory _httpClientFactory;
+
     /// <summary>
-    /// Execute a get request to the Securely API with a url suffix.
+    /// 
     /// </summary>
-    /// <typeparam name="TResult"></typeparam>
-    /// <param name="urlSuffix"></param>
-    /// <returns></returns>
-    public async Task<ISecurelyResponse<TResult?>> ExecuteAsync<TResult>(string urlSuffix)
-        where TResult : new()
-    {
-        using var http = GetHttpClient();
+    /// <param name="options"></param>
+    /// <param name="httpClientFactory"></param>
+    public SecurelyService(IOptions<SecurelyOptions> options, IHttpClientFactory httpClientFactory) {
+        _options = options.Value;
+        _httpClientFactory = httpClientFactory;
+    }
+
+    /// <inheritdoc />
+    public async Task<ISecurelyResponse<TData>> ExecuteAsync<TData>(string apiKey, string apiSecret, string urlSuffix)
+        where TData : new() {
+        using var http = CreateHttpClient(apiKey, apiSecret);
         var response = await http.GetAsync(urlSuffix);
-        return await ConvertResponseAsync<TResult>(response);
+        return await ConvertResponseAsync<TData>(response);
     }
 
-    /// <summary>
-    /// Execute a post request to the Securely API with a request object and a url suffix.
-    /// </summary>
-    /// <typeparam name="TEntity"></typeparam>
-    /// <typeparam name="TResult"></typeparam>
-    /// <param name="request"></param>
-    /// <param name="urlSuffix"></param>
-    /// <returns></returns>
-    public async Task<ISecurelyResponse<TResult?>> ExecuteAsync<TEntity, TResult>(TEntity request, string urlSuffix)
-        where TEntity : new()
-        where TResult : new()
-    {
+    /// <inheritdoc />
+    public async Task<ISecurelyResponse<TData>> ExecuteAsync<TRequest, TData>(TRequest request, string apiKey, string apiSecret, string urlSuffix)
+        where TRequest : new()
+        where TData : new() {
         var json = JsonSerializer.Serialize(request, _jsonSerializerOptions);
-
-        using var http = GetHttpClient();
+        using var http = CreateHttpClient(apiKey, apiSecret);
         var response = await http.PostAsync(urlSuffix, new StringContent(json, Encoding.UTF8, "application/json"));
-        return await ConvertResponseAsync<TResult>(response);
+        return await ConvertResponseAsync<TData>(response);
     }
 
-    private async Task<ISecurelyResponse<TEntity?>> ConvertResponseAsync<TEntity>(HttpResponseMessage response) where TEntity : new()
-    {
-        var integrationResponse = new SecurelyResponse<TEntity?>
-        {
+    private async Task<ISecurelyResponse<TData>> ConvertResponseAsync<TData>(HttpResponseMessage response) where TData : new() {
+        var integrationResponse = new SecurelyResponse<TData> {
             StatusCode = response.StatusCode,
             RawResponse = await response.Content.ReadAsStringAsync(),
             Url = response.RequestMessage?.RequestUri?.ToString(),
@@ -81,20 +92,24 @@ public class SecurelyService
                 ? await response.RequestMessage.Content.ReadAsStringAsync()
                 : null,
         };
-        integrationResponse.Data = JsonSerializer.Deserialize<BaseResponse<TEntity?>>(integrationResponse.RawResponse, _jsonSerializerOptions) ?? new BaseResponse<TEntity?>();
+
+        integrationResponse.Data = JsonSerializer.Deserialize<TData>(integrationResponse.RawResponse, _jsonSerializerOptions)
+                                   ?? new TData();
 
         return integrationResponse;
     }
 
-    private HttpClient GetHttpClient()
-    {
-        var httpClient = new HttpClient
-        {
-            BaseAddress = new Uri(this._apiUrl)
-        };
-        httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(Encoding.UTF8.GetBytes($"{_apiKey}:{_apiSecret}")));
-        httpClient.DefaultRequestHeaders.UserAgent.ParseAdd("SeucerlyPOS/1.0.0");
-        httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-        return httpClient;
+    private HttpClient CreateHttpClient(string apiKey, string apiSecret) {
+        var client = _httpClientFactory.CreateClient();
+        client.BaseAddress = new Uri(_options.UseSandbox
+            ? "https://sandbox-api.securelyme.io"
+            : "https://api.securelyme.io");
+
+        client.DefaultRequestHeaders.Authorization =
+            new AuthenticationHeaderValue("Basic", Convert.ToBase64String(Encoding.UTF8.GetBytes($"{apiKey}:{apiSecret}")));
+        client.DefaultRequestHeaders.UserAgent.ParseAdd("SecurelyPOS/1.0.0");
+        client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+        return client;
     }
 }

@@ -3,8 +3,7 @@
 /// <summary>
 /// Error information in the case that the request was unsuccessful
 /// </summary>
-public class BaseResponseError
-{
+public class BaseResponseError {
     /// <summary>
     /// Error Code
     /// </summary>

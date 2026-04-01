@@ -2,15 +2,13 @@
 /// <summary>
 /// The frequency that the subscription should pull payment
 /// </summary>
-public sealed class Frequency
-{
+public sealed class Frequency {
     private readonly string _value;
 
     /// <summary>
     /// The frequency that the subscription should pull payment
     /// </summary>
-    public Frequency(string value)
-    {
+    public Frequency(string value) {
         _value = value;
     }
 
@@ -50,20 +48,16 @@ public sealed class Frequency
     /// <param name="obj">The object to compare with the current instance.</param>
     /// <returns><see langword="true"/> if the specified object is of type <c>Frequency</c> and has the same value as the current
     /// instance; otherwise, <see langword="false"/>.</returns>
-    public override bool Equals(object? obj)
-    {
-        if (obj == null)
-        {
+    public override bool Equals(object? obj) {
+        if (obj == null) {
             return false;
         }
 
-        if (ReferenceEquals(this, obj))
-        {
+        if (ReferenceEquals(this, obj)) {
             return true;
         }
 
-        if (obj.GetType() != typeof(Frequency))
-        {
+        if (obj.GetType() != typeof(Frequency)) {
             return false;
         }
 
@@ -75,8 +69,7 @@ public sealed class Frequency
     /// Defines an implicit conversion from a <see cref="string"/> to a <see cref="Frequency"/> object.
     /// </summary>
     /// <param name="value">The string representation of the frequency.</param>
-    public static implicit operator Frequency(string value)
-    {
+    public static implicit operator Frequency(string value) {
         return new Frequency(value);
     }
 
@@ -87,8 +80,7 @@ public sealed class Frequency
     /// underlying field. If the field is <see langword="null"/>, the method returns 0. The hash code is computed using
     /// the <see cref="object.GetHashCode"/> method of the underlying value.</remarks>
     /// <returns>An integer hash code representing the current object.</returns>
-    public override int GetHashCode()
-    {
+    public override int GetHashCode() {
         unchecked { return _value?.GetHashCode() ?? 0; }
     }
 
@@ -96,8 +88,7 @@ public sealed class Frequency
     /// Returns a string representation of the current object.
     /// </summary>
     /// <returns>The string value of the current object.</returns>
-    public override string ToString()
-    {
+    public override string ToString() {
         return _value;
     }
 }
